@@ -14,7 +14,7 @@ const ds=[["A","Egyptian Minimal","هندسة هادئة مستوحاة من ا�
 let s={i:0,story:"بحب الكورة ومهتم بالحضارة المصرية القديمة. عايز باب فخم وهادي ومختلف.",d:"A",w:100,h:220,b:2500,order:"",paid:false};
 const money=n=>Math.round(n).toLocaleString("ar-EG")+" $";
 const design=()=>ds.find(x=>x[0]===s.d)||ds[0];
-const estimate=()=>Math.round(design()[3]*Math.max(.85,Math.min(1.35,(s.w*s.h)/(100*220))));
+if(s.i===1)x+=button("شوف التصاميم","go(2)");const estimate=()=>Math.round(design()[3]*Math.max(.85,Math.min(1.35,(s.w*s.h)/(100*220))));
 function go(i){s.i=Math.max(0,Math.min(11,i));render();scrollTo(0,0)}
 function button(t,f,alt=false){return `<button class="btn ${alt?"alt":""}" onclick="${f}">${t}</button>`}
 function pill(a,b){return `<div class="pill"><b>${a}</b>${b}</div>`}
@@ -24,7 +24,8 @@ progress.innerHTML=steps.map((x,i)=>`<div class="p ${i===s.i?"a":""}" onclick="g
 let x="";
 if(s.i===0)x=card("01","احكي لنا عنك",`<div class="help">اكتب اهتماماتك وشخصيتك والجو اللي نفسك تشوفه في الباب.</div><textarea id="story" class="input">${s.story}</textarea>${button("حلّل شخصيتي وابدأ","analyze()")}`);
 if(s.i===1)x=card("02","Customer DNA",`${pill("الشخصية","واثق • هادئ • يحب المعنى والتفاصيل")}${pill("الهوية","تراث مصري + روح رياضية + فخامة")}${pill("الاتجاه","Minimal • Premium • Original")}${button("اعرض 3 تصاميم أصلية","go(2)")}`);
-if(s.i===2)x=card("03","اختار مفهوم الباب",`<div class="grid">${ds.map(d=>`<div class="tile ${s.d===d[0]?"sel":""}" onclick="pick('${d[0]}')"><div class="badge">${d[0]}</div><h3>${d[1]}</h3><div class="help">${d[2]}</div><div class="price">${money(d[3])} تقديري</div></div>`).join("")}</div>${button("تأكيد التصميم والمقاسات","go(3)")}`);
+if(s.i===1)x+=button("شوف التصاميم","go(2)");
+  if(s.i===2)x=card("03","اختار مفهوم الباب",`<div class="grid">${ds.map(d=>`<div class="tile ${s.d===d[0]?"sel":""}" onclick="pick('${d[0]}')"><div class="badge">${d[0]}</div><h3>${d[1]}</h3><div class="help">${d[2]}</div><div class="price">${money(d[3])} تقديري</div></div>`).join("")}</div>${button("تأكيد التصميم والمقاسات","go(3)")}`);
 if(s.i===3)x=card("04","المقاسات والميزانية",`<div class="fields"><div class="field"><label>العرض (سم)</label><input id="w" type="number" value="${s.w}"></div><div class="field"><label>الارتفاع (سم)</label><input id="h" type="number" value="${s.h}"></div><div class="field"><label>الميزانية ($)</label><input id="b" type="number" value="${s.b}"></div></div>${button("احسب السعر","dims()")}`);
 if(s.i===4)x=card("05","السعر المتوقع",`<div class="big">${money(estimate())}</div><div class="help">تقدير Demo يتغير حسب التصميم والمقاس والخامة والتشطيب.</div>${pill("الميزانية",money(s.b))}${pill("الفرق",money(estimate()-s.b))}${button("فحص هندسي وقابلية تصنيع","go(5)")}`);
 if(s.i===5)x=card("06","Engineering & QA",`${pill("الأبعاد",`${s.w} × ${s.h} سم`)}${pill("التصنيع","قابل للتنفيذ مبدئيًا")}${pill("QA","لا توجد تعارضات Demo")}${pill("قبل الإنتاج","اعتماد مصنع حقيقي ورسومات تنفيذية")}${button("مطابقة المصانع","go(6)")}`);
