@@ -1,0 +1,59 @@
+<!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0d10"><title>Door DNA AI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b0d10;color:#f8f8f5;font-family:Arial,Tahoma,sans-serif}.app{max-width:560px;margin:auto;padding:18px 15px 35px;min-height:100vh}.top{display:flex;justify-content:space-between;align-items:center}.brand{color:#d7b56d;font-size:22px;font-weight:900;letter-spacing:2px}.sub{color:#a9b0bb;font-size:11px;margin-top:4px}.demo{border:1px solid #d7b56d;color:#d7b56d;padding:5px 9px;border-radius:8px;font-size:10px}.progress{display:flex;gap:6px;overflow:auto;padding:16px 0}.p{background:#15191f;color:#89919c;padding:7px 9px;border-radius:20px;font-size:10px;white-space:nowrap}.p.a{background:#d7b56d;color:#111;font-weight:bold}.card{background:#15191f;border:1px solid #2a3038;border-radius:18px;padding:18px}.ey{color:#d7b56d;font-size:11px;font-weight:bold}.title{font-size:23px;font-weight:800;margin:6px 0 12px}.help{color:#a9b0bb;font-size:13px;line-height:1.7}.input{width:100%;min-height:145px;margin:14px 0;padding:13px;background:#0f1318;border:1px solid #363d46;border-radius:12px;color:#fff;font-size:14px}.btn{width:100%;padding:14px;border:0;border-radius:12px;background:#d7b56d;color:#111;font-weight:900;margin-top:14px;font-size:14px}.btn.alt{background:#252b33;color:#fff}.grid{display:grid;grid-template-columns:1fr;gap:12px}.tile{background:#101419;border:1px solid #29303a;border-radius:15px;padding:12px;cursor:pointer}.tile.sel{border-color:#d7b56d;box-shadow:0 0 0 1px #d7b56d inset}.tile h3{font-size:15px;margin:0 0 6px}.price{color:#d7b56d;font-weight:900;font-size:12px;margin-top:7px}.pills{display:grid;gap:8px;margin-top:12px}.pill{background:#101419;border-radius:11px;padding:11px}.pill b{display:block;color:#d7b56d;font-size:10px;margin-bottom:4px}.big{font-size:36px;color:#d7b56d;font-weight:900}.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;color:#a9b0bb;font-size:11px;margin-bottom:5px}.field input{width:100%;padding:11px;background:#0f1318;border:1px solid #363d46;border-radius:10px;color:#fff;text-align:center}.ok{margin-top:12px;background:#132119;color:#7ed6a4;border-radius:12px;padding:12px;font-size:12px;font-weight:bold}.warn{color:#929aa5;font-size:10px;line-height:1.7;margin-top:12px}.foot{text-align:center;color:#66707c;font-size:10px;margin-top:22px}.doorbox{height:150px;border-radius:10px 10px 4px 4px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid #5c626b;background:#1c2026}.door{width:76px;height:132px;border:3px solid #d7b56d;border-radius:4px 4px 1px 1px;position:relative}.door:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#d7b56d;right:9px;top:65px}.egypt .door{background:linear-gradient(90deg,#24262a 0 42%,#c9a65b 43% 46%,#24262a 47% 100%)}.legend .door{background:repeating-linear-gradient(135deg,#171a1e 0 13px,#30343a 14px 18px)}.royal .door{background:radial-gradient(circle at 50% 30%,#3a3426 0 10%,#171a1e 11% 100%)}.dna{display:grid;gap:8px}.dna .pill{padding:10px}.tag{display:inline-block;background:#252b33;color:#ddd;border-radius:20px;padding:5px 8px;margin:3px;font-size:10px}
+@media(max-width:390px){.grid{grid-template-columns:1fr}}
+</style></head><body><div class="app">
+<div class="top"><div><div class="brand">DOOR DNA AI</div><div class="sub">من شخصيتك إلى بابك</div></div><div class="demo">WEB DEMO</div></div>
+<div id="progress" class="progress"></div><div id="screen"></div>
+<div class="foot">V35 • Prototype • لا توجد معاملات مالية حقيقية</div></div>
+<script>
+const steps=["القصة","DNA","التصميم","المقاس","السعر","الهندسة","المصانع","العروض","الطلب","العقد","الدفع","المتابعة"];
+const ds=[
+["A","Egyptian Minimal","تصميم هادئ بخطوط هندسية ولمسة مستوحاة من الهوية المصرية.","1850","egypt"],
+["B","Legend Line","تصميم رياضي ديناميكي بخطوط قوية ولمسة فاخرة.","2150","legend"],
+["C","Royal Quiet","فخامة هادئة وتفاصيل قليلة وحضور قوي.","2450","royal"]
+];
+let s={i:0,story:"",dna:{style:"فخم وهادئ",tags:["شخصية واثقة","هوية خاصة","Minimal Premium"]},d:"A",w:100,h:220,b:2500,order:"",paid:false};
+const money=n=>Math.round(n).toLocaleString("ar-EG")+" $";
+const design=()=>ds.find(x=>x[0]===s.d)||ds[0];
+const estimate=()=>Math.round(Number(design()[3])*Math.max(.85,Math.min(1.35,(s.w*s.h)/(100*220))));
+function go(i){s.i=Math.max(0,Math.min(11,i));render();window.scrollTo(0,0)}
+function button(t,f,alt=false){return `<button class="btn ${alt?"alt":""}" onclick="${f}">${t}</button>`}
+function pill(a,b){return `<div class="pill"><b>${a}</b>${b}</div>`}
+function card(e,t,b){return `<div class="card"><div class="ey">${e}</div><div class="title">${t}</div>${b}</div>`}
+function render(){
+document.getElementById("progress").innerHTML=steps.map((x,i)=>`<div class="p ${i===s.i?"a":""}" onclick="go(${i})">${i+1}. ${x}</div>`).join("");
+let x="";
+if(s.i===0)x=card("01","احكي لنا عنك",`<div class="help">اكتب شخصيتك واهتماماتك والجو اللي نفسك تشوفه في الباب. التحليل هيعتمد على كلامك أنت.</div><textarea id="story" class="input" placeholder="مثال: بحب الهدوء والفخامة وبحب الرياضة ومش عايز باب تقليدي">${s.story}</textarea>${button("حلّل شخصيتي وابدأ","analyze()")}`);
+if(s.i===1)x=card("02","DNA شخصيتك",`<div class="dna">${pill("الأسلوب",s.dna.style)}${pill("تحليل الشخصية",s.dna.tags.map(t=>`<span class="tag">${t}</span>`).join(""))}${pill("ملخص","الباب المقترح هيتبني على الكلام اللي كتبته، مش على نص ثابت.")}</div>${button("اعرض 3 تصاميم أصلية","go(2)")}`);
+if(s.i===2)x=card("03","اختار مفهوم الباب",`<div class="grid">${ds.map(d=>`<div class="tile ${s.d===d[0]?"sel":""}" onclick="pick('${d[0]}')"><div class="doorbox ${d[4]}"><div class="door"></div></div><h3>${d[1]}</h3><div class="help">${d[2]}</div><div class="price">${money(d[3])} تقديري</div></div>`).join("")}</div>${button("تأكيد التصميم والمقاسات","go(3)")}`);
+if(s.i===3)x=card("04","المقاسات والميزانية",`<div class="fields"><div class="field"><label>العرض (سم)</label><input id="w" type="number" value="${s.w}"></div><div class="field"><label>الارتفاع (سم)</label><input id="h" type="number" value="${s.h}"></div><div class="field"><label>الميزانية ($)</label><input id="b" type="number" value="${s.b}"></div></div>${button("احسب السعر","dims()")}`);
+if(s.i===4)x=card("05","السعر المتوقع",`<div class="big">${money(estimate())}</div><div class="help">تقدير Demo يتغير حسب التصميم والمقاس.</div>${pill("الميزانية",money(s.b))}${pill("الفرق",money(estimate()-s.b))}${button("فحص هندسي وقابلية تصنيع","go(5)")}`);
+if(s.i===5)x=card("06","الهندسة و QA",`${pill("الأبعاد",`${s.w} × ${s.h} سم`)}${pill("التصنيع","قابل للتنفيذ مبدئيًا")}${pill("QA","لا توجد تعارضات Demo")}${button("مطابقة المصانع","go(6)")}`);
+if(s.i===6)x=card("07","مطابقة المصانع",`<div class="pills"><div class="pill"><b>Cairo Premium Doors</b>94% تطابق</div><div class="pill"><b>Nile Metal & Wood</b>89% تطابق</div><div class="pill"><b>Royal Craft Factory</b>86% تطابق</div></div><div class="warn">الأسماء والأسعار بيانات Demo وليست مصانع متعاقدًا معها.</div>${button("إنشاء RFQ ومقارنة العروض","go(7)")}`);
+if(s.i===7)x=card("08","العروض",`<div class="pills"><div class="pill"><b>Cairo Premium Doors</b>21 يوم • ضمان 24 شهر • 1,980 $</div><div class="pill"><b>Nile Metal & Wood</b>18 يوم • ضمان 18 شهر • 2,120 $</div><div class="pill"><b>Royal Craft Factory</b>25 يوم • ضمان 36 شهر • 2,290 $</div></div>${button("اختيار العرض وإنشاء الطلب","order()")}`);
+if(s.i===8)x=card("09","الطلب",`<div class="big">${s.order}</div><div class="help">تم ربط الطلب بالتصميم والمقاسات والعرض.</div>${button("التالي: العقد","go(9)")}`);
+if(s.i===9)x=card("10","العقد",`${pill("الحالة","مسودة جاهزة للمراجعة")}${pill("النطاق","تصنيع + تشطيب + تسليم")}${pill("الحصرية والملكية","تحتاج شروطًا قانونية منفصلة")}${button("موافقة Demo والانتقال للدفع","go(10)")}`);
+if(s.i===10)x=card("11","الدفع التجريبي",`<div class="big">${money(estimate())}</div><div class="help">لا يتم تحصيل أموال حقيقية في هذه النسخة.</div>${button("تنفيذ دفعة Demo","pay()")}`);
+if(s.i===11)x=card("12","حالة المشروع",`${pill("رقم المشروع",s.order||"DDA-DEMO")}${pill("التصميم",design()[1])}${pill("الدفع",s.paid?"Demo Paid":"Pending")}${pill("التالي","مصنع حقيقي → اعتماد → إنتاج")}${s.paid?'<div class="ok">✓ تم تسجيل العملية التجريبية بنجاح — بدون تحصيل مالي.</div>':""}${button("ابدأ مشروع جديد","reset()",true)}`);
+document.getElementById("screen").innerHTML=x;
+}
+function analyze(){
+s.story=document.getElementById("story").value.trim()||"شخصية هادئة وفخمة";
+const q=s.story.toLowerCase();
+let style=q.includes("فخم")||q.includes("فاخر")||q.includes("رَاق")?"فخم وهادئ":"هادئ وعصري";
+let tags=["شخصية واثقة","هوية خاصة"];
+if(q.includes("رياض")||q.includes("كورة")||q.includes("كرة")||q.includes("ميسي"))tags.push("روح رياضية");
+if(q.includes("مصر")||q.includes("مصري")||q.includes("فرعون")||q.includes("حضارة"))tags.push("هوية مصرية");
+if(q.includes("بسيط")||q.includes("هادئ")||q.includes("مينيمال"))tags.push("Minimal");
+s.dna={style,tags};s.d=(tags.includes("روح رياضية")?"B":tags.includes("هوية مصرية")?"A":"C");go(1)
+}
+function pick(d){s.d=d;render()}
+function dims(){s.w=+document.getElementById("w").value||100;s.h=+document.getElementById("h").value||220;s.b=+document.getElementById("b").value||2500;go(4)}
+function order(){s.order="DDA-"+Math.random().toString(36).slice(2,8).toUpperCase();go(8)}
+function pay(){s.paid=true;go(11)}
+function reset(){s={i:0,story:"",dna:{style:"فخم وهادئ",tags:["شخصية واثقة","هوية خاصة","Minimal Premium"]},d:"A",w:100,h:220,b:2500,order:"",paid:false};render()}
+render();
+</script></body></html>
