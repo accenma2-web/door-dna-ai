@@ -34,7 +34,7 @@ if(s.i===8)x=card("09","Order",`<div class="big">${s.order}</div><div class="hel
 if(s.i===9)x=card("10","العقد",`${pill("الحالة","مسودة جاهزة للمراجعة")}${pill("النطاق","تصنيع + تشطيب + تسليم")}${pill("الحصرية والملكية","تحتاج شروطًا قانونية منفصلة")}${button("موافقة Demo والانتقال للدفع","go(10)")}`);
 if(s.i===10)x=card("11","الدفع التجريبي",`<div class="big">${money(estimate())}</div><div class="help">لا يتم تحصيل أموال حقيقية في هذه النسخة.</div>${button("تنفيذ دفعة Demo","pay()")}`);
 if(s.i===11)x=card("12","حالة المشروع",`${pill("رقم المشروع",s.order||"DDA-DEMO")}${pill("التصميم",design()[1])}${pill("الدفع",s.paid?"Demo Paid":"Pending")}${pill("التالي","مصنع حقيقي → اعتماد → إنتاج")}${s.paid?'<div class="ok">✓ تم تسجيل العملية التجريبية بنجاح — بدون تحصيل مالي.</div>':""}${button("ابدأ مشروع جديد","reset()",true)}`);
-screen.innerHTML=x;
+document.getElementById("screen").innerHTML=x;
 }
 function analyze(){s.story=document.getElementById("story").value||s.story;go(1)}
 function pick(d){s.d=d;render()}
