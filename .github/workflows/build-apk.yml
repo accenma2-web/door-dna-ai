@@ -1,0 +1,64 @@
+name: Build Door DNA AI APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Create Capacitor project
+        run: |
+          mkdir -p www
+          cp index.html www/index.html
+
+          cat > package.json <<'EOF'
+          {
+            "name": "door-dna-ai",
+            "version": "1.0.0",
+            "private": true
+          }
+          EOF
+
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.doordnaai.app",
+            "appName": "Door DNA AI",
+            "webDir": "www"
+          }
+          EOF
+
+          npm install @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Sync app
+        run: npx cap sync android
+
+      - name: Build APK
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Door-DNA-AI-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
