@@ -1,6 +1,12 @@
 {
-  "name": "door-dna-ai-v39-luxury",
+  "name": "door-dna-ai-v40-cloudflare",
   "private": true,
-  "scripts": { "deploy": "wrangler deploy" },
-  "devDependencies": { "wrangler": "^4.0.0" }
+  "version": "40.0.0",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "check": "node --check worker.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
 }

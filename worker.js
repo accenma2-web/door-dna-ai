@@ -6,20 +6,29 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 function json(data, status=200) { return new Response(JSON.stringify(data), {status, headers: {'content-type':'application/json; charset=utf-8', ...corsHeaders}}); }
-function buildPrompt(basePrompt, conceptName, direction) { return `${basePrompt}\n\nCreate this as the ${conceptName} concept. ${direction} Keep the same owner DNA, property, privacy level, and manufacturability. Make it visibly different from the other concepts while remaining coherent with the client's identity.`; }
-async function generateOne(apiKey, prompt) {
- const response=await fetch(OPENAI_URL,{method:'POST',headers:{'Authorization':`Bearer ${apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({model:'gpt-image-2',prompt,size:'1024x1536',quality:'high',output_format:'png'})});
- const text=await response.text(); let data; try{data=JSON.parse(text)}catch{data={error:{message:text}}}
- if(!response.ok) throw new Error(data?.error?.message||`OpenAI request failed (${response.status})`);
- const b64=data?.data?.[0]?.b64_json; if(!b64) throw new Error('لم يتم استلام صورة من خدمة توليد الصور'); return b64;
+function buildPrompt(basePrompt, conceptName, direction) { return `${basePrompt}\n\nCreate this as the ${conceptName} concept. ${direction} Keep the same owner DNA, property, privacy level, and manufacturability. Make it visibly different from the other concepts while remaining coherent with the client's identity. Photorealistic luxury architectural entrance door, straight-on product visualization, full door visible, realistic materials, realistic construction details, clean premium environment, no people, no text, no logos.`; }
+async function generateOne(ai, prompt, seed) {
+  const result = await ai.run('@cf/black-forest-labs/flux-2-klein-9b', {
+    prompt,
+    width: 1024,
+    height: 1536,
+    seed,
+  });
+  const b64 = result?.image;
+  if(!b64) throw new Error('لم يتم استلام صورة من Cloudflare Workers AI');
+  return b64;
 }
 async function handleGenerate(request,env) {
- if(request.method==='OPTIONS') return new Response(null,{status:204,headers:corsHeaders});
- if(request.method!=='POST') return json({error:'Method not allowed'},405);
- if(!env.OPENAI_API_KEY) return json({error:'مفتاح OpenAI غير مضبوط في Cloudflare بعد.'},500);
- let body; try{body=await request.json()}catch{return json({error:'بيانات الطلب غير صحيحة.'},400)}
- const prompt=String(body?.prompt||'').trim(); if(!prompt) return json({error:'لم يتم إرسال وصف التصميم.'},400); if(prompt.length>12000) return json({error:'وصف التصميم طويل جدًا.'},400);
- const concepts=[['Egyptian Minimal','Use quiet vertical proportions, restrained Egyptian-inspired geometry, controlled shadow lines, and minimal premium detailing.'],['Legend Line','Use stronger dynamic lines, a confident central gesture, refined metal accents, and a more expressive contemporary presence without becoming ornamental.'],['Royal Quiet','Use a monumental calm composition, deep material contrast, subtle luxury detailing, and a sophisticated estate-level sense of scale.']];
- try{const images=await Promise.all(concepts.map(([name,direction])=>generateOne(env.OPENAI_API_KEY,buildPrompt(prompt,name,direction)))); return json({images})}catch(error){return json({error:error?.message||'حدث خطأ أثناء توليد الصور.'},502)}
+  if(request.method==='OPTIONS') return new Response(null,{status:204,headers:corsHeaders});
+  if(request.method!=='POST') return json({error:'Method not allowed'},405);
+  if(!env.AI) return json({error:'ربط Cloudflare Workers AI غير مضبوط بعد.'},500);
+  let body; try{body=await request.json()}catch{return json({error:'بيانات الطلب غير صحيحة.'},400)}
+  const prompt=String(body?.prompt||'').trim(); if(!prompt) return json({error:'لم يتم إرسال وصف التصميم.'},400); if(prompt.length>12000) return json({error:'وصف التصميم طويل جدًا.'},400);
+  const concepts=[['Egyptian Minimal','Use quiet vertical proportions, restrained Egyptian-inspired geometry, controlled shadow lines, and minimal premium detailing.'],['Legend Line','Use stronger dynamic lines, a confident central gesture, refined metal accents, and a more expressive contemporary presence without becoming ornamental.'],['Royal Quiet','Use a monumental calm composition, deep material contrast, subtle luxury detailing, and a sophisticated estate-level sense of scale.']];
+  try{
+    const seedBase=Math.floor(Math.random()*2147483647);
+    const images=await Promise.all(concepts.map(([name,direction],i)=>generateOne(env.AI,buildPrompt(prompt,name,direction),seedBase+i*7919)));
+    return json({images, provider:'cloudflare-workers-ai', model:'@cf/black-forest-labs/flux-2-klein-9b'});
+  }catch(error){return json({error:error?.message||'حدث خطأ أثناء توليد الصور.'},502)}
 }
 export default {async fetch(request,env) {const url=new URL(request.url); if(url.pathname==='/api/generate-door') return handleGenerate(request,env); return new Response(HTML,{headers:{'content-type':'text/html; charset=utf-8'}});}};
