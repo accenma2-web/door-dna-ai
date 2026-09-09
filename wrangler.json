@@ -1,0 +1,7 @@
+{
+  "name": "door-dna-ai-v39-luxury",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-01",
+  "ai": { "binding": "AI" },
+  "assets": { "directory": "./assets", "binding": "ASSETS" }
+}
