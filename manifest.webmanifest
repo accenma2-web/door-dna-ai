@@ -1,0 +1,13 @@
+{
+  "name":"Door DNA AI",
+  "short_name":"Door DNA AI",
+  "start_url":"/",
+  "display":"standalone",
+  "background_color":"#030405",
+  "theme_color":"#07090c",
+  "dir":"rtl",
+  "lang":"ar",
+  "icons":[
+    {"src":"/icon.png","sizes":"1024x1024","type":"image/png","purpose":"any maskable"}
+  ]
+}
