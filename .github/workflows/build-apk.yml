@@ -1,0 +1,77 @@
+name: Build Door DNA AI APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Prepare web app
+        run: |
+          mkdir -p www assets
+          cp index.html www/index.html
+          cp icon.png assets/logo.png
+          cp icon.png www/icon.png
+          cp manifest.webmanifest www/manifest.webmanifest
+
+      - name: Create package.json
+        run: |
+          cat > package.json <<'JSON'
+          {
+            "name": "door-dna-ai",
+            "version": "1.0.0",
+            "private": true
+          }
+          JSON
+
+      - name: Create Capacitor config
+        run: |
+          cat > capacitor.config.json <<'JSON'
+          {
+            "appId": "com.doordnaai.app",
+            "appName": "Door DNA AI",
+            "webDir": "www"
+          }
+          JSON
+
+      - name: Install Capacitor
+        run: npm install @capacitor/core@7 @capacitor/cli@7 @capacitor/android@7 @capacitor/assets@3
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Generate Door DNA AI icon
+        run: npx capacitor-assets generate --android --iconBackgroundColor '#050607' --iconBackgroundColorDark '#050607'
+
+      - name: Sync Android project
+        run: npx cap sync android
+
+      - name: Build Debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Door-DNA-AI-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
